@@ -1,7 +1,9 @@
-SELECT * FROM orders
-WHERE placed_at = 'YYYY-MM-DD'
-ORDER BY cost DESC
-LIMIT [:10]
+SELECT SUM(COST)
+FROM (  SELECT * FROM orders
+        WHERE placed_at = 'YYYY-MM-DD'
+        ORDER BY cost DESC
+        LIMIT [:10]
+) AS subquery;
 
 
 
