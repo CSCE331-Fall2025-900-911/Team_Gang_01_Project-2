@@ -158,8 +158,6 @@ def generate_orders(
             drink_order = DrinkOrder(id=drink_order_id, menu_id=menu_item.id, order_id=order_id)
 
             order_total += menu_item.cost
-            sales_total += order_total
-
             drink_orders.append(drink_order)
 
             # pick between 1 and 5 (inclusive) ingredients for this drink 
@@ -175,6 +173,8 @@ def generate_orders(
                 )
 
                 drink_ingredients.append(drink_ingredient)
+
+        sales_total += order_total
 
         order = Order(
             id=order_id, 
