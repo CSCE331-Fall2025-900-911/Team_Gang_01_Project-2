@@ -1,0 +1,200 @@
+SELECT COUNT(*) AS number_of_menu_items FROM menu;
+
+SELECT
+  SUM(cost) AS yesterdays_sales
+FROM
+  orders
+WHERE
+  DATE(placed_at) = CURRENT_DATE - INTERVAL '1 day';
+
+
+-- The order here is important!
+DELETE FROM drinks_ingredients;
+DELETE FROM drinks_orders;
+DELETE FROM orders;
+DELETE FROM employees;
+DELETE FROM ingredients;
+DELETE FROM menu;
+DELETE FROM categories;
+
+
+SELECT orders.id, m.name, m.cost
+FROM menu m
+JOIN drinks_orders orders ON m.id = orders.menu_id
+
+-- The order here is important!
+DROP TABLE drinks_ingredients;
+DROP TABLE drinks_orders;
+DROP TABLE orders;
+DROP TABLE employees;
+DROP TABLE ingredients;
+DROP TABLE menu;
+DROP TABLE categories;
+
+-- Each employee total sales of the previous day
+
+SELECT employee_id,
+       SUM(cost) as total_sales
+FROM orders
+WHERE DATE(placed_at) = CURRENT_DATE - INTERVAL '1 Day'
+GROUP BY employee_id
+ORDER BY total_sales DESC
+
+
+
+SELECT * FROM drinks_ingredients
+WHERE drink_id = $1;
+
+SELECT * FROM orders
+    WHERE placed_at BETWEEN CURRENT_DATE - INTERVAL '5 days' AND CURRENT_DATE;
+
+--Parameter $1: category_id
+SELECT * FROM menu
+WHERE menu.category_id = $1
+
+
+SELECT
+    employee_id,
+    COUNT(*) AS orders_taken
+FROM
+    orders
+WHERE
+    DATE(placed_at) = CURRENT_DATE - INTERVAL '1 day'
+GROUP BY
+    employee_id
+ORDER BY
+    orders_taken DESC;
+
+
+SELECT DATE_TRUNC('hour', placed_at), SUM(cost) as sales
+FROM orders
+WHERE placed_at::DATE = CURRENT_DATE - 1
+GROUP BY DATE_TRUNC('hour', placed_at);
+
+
+SELECT 
+    DATE_PART('week', placed_at) AS week_num,
+    COUNT(*) AS amt_of_orders
+FROM orders
+GROUP BY 
+    DATE_PART('week', placed_at)
+ORDER BY week_num;
+
+
+--Special Query 2
+/*
+DECLARE @order_hour INT;
+SET @order_hour = 12;
+SELECT SUM(cost) FROM orders WHERE HOUR(placed_at)=@order_hour;
+SELECT COUNT(*) FROM orders WHERE HOUR(placed_at)=@order_hour;
+*/
+
+SELECT 
+    EXTRACT(HOUR FROM placed_at) AS order_hour,
+    COUNT(*) AS num_orders,
+    SUM(cost) AS total_revenue
+FROM orders
+GROUP BY order_hour
+ORDER BY order_hour;
+
+
+SELECT 
+        order_date,
+        SUM(COST) AS top_10_sum
+FROM (  
+        SELECT 
+        placed_at::date AS order_date, 
+        cost, 
+        ROW_NUMBER() OVER (
+        PARTITION BY placed_at::date
+        ORDER BY cost DESC
+        ) AS num
+        FROM orders
+) AS subquery
+WHERE num <= 10
+GROUP BY order_date
+ORDER BY top_10_sum DESC;
+
+SELECT 
+        order_date,
+        SUM(COST) AS top_10_sum
+FROM (  
+        SELECT 
+        placed_at::date AS order_date, 
+        cost, 
+        ROW_NUMBER() OVER (
+        PARTITION BY placed_at::date
+        ORDER BY cost DESC
+        ) AS num
+        FROM orders
+) AS subquery
+WHERE num <= 10
+GROUP BY order_date
+ORDER BY top_10_sum DESC;
+
+
+WITH week_orders AS (
+    select 
+        o.id,
+        CAST(o.placed_at as DATE) as day,
+        o.cost
+    from orders o
+    WHERE date_trunc('WEEK', o.placed_at) = date_trunc('WEEK', '2025-09-22'::DATE)
+),
+day_sales AS (
+    SELECT wo.day, SUM(wo.cost) AS revenue
+    FROM week_orders wo
+    GROUP BY wo.day
+),
+lowest_day AS (
+    SELECT ds.day, ds.revenue
+    FROM day_sales ds
+    ORDER BY ds.revenue ASC, day ASC
+    LIMIT 1
+),
+top_seller AS (
+    SELECT m.name AS drink, COUNT(*) AS num_sold
+    FROM lowest_day ld
+    JOIN week_orders   wo  ON wo.day = ld.day
+    JOIN drinks_orders dro ON dro.order_id = wo.id
+    JOIN menu          m   ON m.id = dro.menu_id
+    GROUP BY m.name
+    ORDER BY num_sold DESC, m.name
+    LIMIT 1
+)
+SELECT 
+    ld.day AS lowest_sales_day,
+    ld.revenue AS revenue,
+    ts.drink AS top_seller,
+    ts.num_sold
+FROM lowest_day ld
+JOIN top_seller ts ON TRUE;
+
+
+SELECT
+    MIN(placed_at) AS first_sale_date,
+    MAX(placed_at) AS last_sale_date,
+    COUNT(DISTINCT DATE_TRUNC('week', placed_at)) AS total_weeks
+FROM
+    orders;
+
+SELECT
+  SUM(cost) AS today_so_far
+FROM
+  orders
+WHERE
+  DATE(placed_at) = CURRENT_DATE;
+
+SELECT SUM(cost) AS total_sales FROM orders;
+
+
+SELECT
+    DATE(placed_at) AS sales_day,
+    SUM(cost) AS daily_total
+FROM
+    orders
+GROUP BY
+    sales_day
+ORDER BY
+    daily_total DESC
+LIMIT 10;
