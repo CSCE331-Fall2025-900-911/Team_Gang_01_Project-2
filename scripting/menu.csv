@@ -1,0 +1,25 @@
+id,name,category_id,stock,cost
+0,Mango Green Tea,0,75,5.80
+1,Peach Tea With Honey Jelly,0,75,6.25
+2,Passion Chess,0,75,6.25
+3,Berry Lychee Burst,0,75,6.25
+4,Mango & Passion Fruit,0,75,6.25
+5,Honey Lemonade,0,75,5.20
+6,Oreo w/ Pearl,1,75,6.75
+7,Taro w/ Pudding,1,75,6.95
+8,Thai Tea w/ Pearl,1,75,6.95
+9,Coffee w/ Ice Cream,1,75,6.95
+10,Mango w/ Ice Cream,1,75,6.95
+11,Strawberry w/ Ice Cream,1,75,6.95
+12,Clasic Pearl Milk Tea,2,75,5.80
+13,Honey Pearl Milk Tea,2,75,6.00
+14,Coffe Creama,2,75,6.50
+15,Hokaido Pearl Milk Tea,2,75,6.25
+16,Mango Green Milk Tea,2,75,6.50
+17,Golden Retriever,2,75,6.75
+18,Tiger Boba,3,75,6.50
+19,Strawberry Coconut,3,75,6.50
+20,Strawberry Coconut Ice Blended,3,75,6.50
+21,Halo Halo,3,75,6.95
+22,Wintermellon Lemonade,3,75,5.80
+23,Wintermellon w/ Fresh Milk,3,75,5.20

@@ -1,0 +1,26 @@
+id,name,stock,cost
+0,Black Tea,100,0
+1,Green Tea,100,0
+2,Oolong Tea,100,0
+3,Sugar,100,0
+4,Pearl,100,0.75
+5,Aloe Vera,100,0.75
+6,Lychee Jelly,100,0.75
+7,Mini Pearl,100,0.75
+8,Red Bean,100,0.75
+9,Creama,100,1.25
+10,Ice Cream,100,1.25
+11,Pudding,100,0.75
+12,Herb Jelly,100,0.75
+13,Alyu Jelly,100,0.75
+14,Coffee Jelly,100,0.75
+15,Honey Jelly,100,0.75
+16,Mango Popping Boba,100,1
+17,Strawberry Popping Boba,100,1
+18,Peach Popping Boba,100,1
+19,Crystal Boba,100,1
+20,Napkins,2000,0
+21,Cups,1000,0
+22,Straws,1000,0
+23,Seal,1000,0
+24,Bag,1000,0
