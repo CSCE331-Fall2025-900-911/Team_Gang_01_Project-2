@@ -172,6 +172,7 @@ def generate_orders(
                     servings=random.randint(1, 3),
                 )
 
+                order_total += ingredient.cost
                 drink_ingredients.append(drink_ingredient)
 
         sales_total += order_total
