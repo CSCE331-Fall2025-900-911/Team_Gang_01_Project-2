@@ -1,0 +1,1 @@
+SELECT COUNT(*) AS number_of_menu_items FROM menu;
