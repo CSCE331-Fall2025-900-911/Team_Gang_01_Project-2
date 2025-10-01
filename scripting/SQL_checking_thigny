@@ -1,76 +1,4 @@
-SELECT COUNT(*) AS number_of_menu_items FROM menu;
-
-SELECT
-  SUM(cost) AS yesterdays_sales
-FROM
-  orders
-WHERE
-  DATE(placed_at) = CURRENT_DATE - INTERVAL '1 day';
-
-
--- The order here is important!
-DELETE FROM drinks_ingredients;
-DELETE FROM drinks_orders;
-DELETE FROM orders;
-DELETE FROM employees;
-DELETE FROM ingredients;
-DELETE FROM menu;
-DELETE FROM categories;
-
-
-SELECT orders.id, m.name, m.cost
-FROM menu m
-JOIN drinks_orders orders ON m.id = orders.menu_id
-
--- The order here is important!
-DROP TABLE drinks_ingredients;
-DROP TABLE drinks_orders;
-DROP TABLE orders;
-DROP TABLE employees;
-DROP TABLE ingredients;
-DROP TABLE menu;
-DROP TABLE categories;
-
--- Each employee total sales of the previous day
-
-SELECT employee_id,
-       SUM(cost) as total_sales
-FROM orders
-WHERE DATE(placed_at) = CURRENT_DATE - INTERVAL '1 Day'
-GROUP BY employee_id
-ORDER BY total_sales DESC
-
-
-
-SELECT * FROM drinks_ingredients
-WHERE drink_id = $1;
-
-SELECT * FROM orders
-    WHERE placed_at BETWEEN CURRENT_DATE - INTERVAL '5 days' AND CURRENT_DATE;
-
---Parameter $1: category_id
-SELECT * FROM menu
-WHERE menu.category_id = $1
-
-
-SELECT
-    employee_id,
-    COUNT(*) AS orders_taken
-FROM
-    orders
-WHERE
-    DATE(placed_at) = CURRENT_DATE - INTERVAL '1 day'
-GROUP BY
-    employee_id
-ORDER BY
-    orders_taken DESC;
-
-
-SELECT DATE_TRUNC('hour', placed_at), SUM(cost) as sales
-FROM orders
-WHERE placed_at::DATE = CURRENT_DATE - 1
-GROUP BY DATE_TRUNC('hour', placed_at);
-
+SPECIAL Query 1 - weekly sales history
 
 SELECT 
     DATE_PART('week', placed_at) AS week_num,
@@ -80,16 +8,8 @@ GROUP BY
     DATE_PART('week', placed_at)
 ORDER BY week_num;
 
+SPECIAL QUERY 2 - realistic sales history
 
---Special Query 2
-/*
-DECLARE @order_hour INT;
-SET @order_hour = 12;
-SELECT SUM(cost) FROM orders WHERE HOUR(placed_at)=@order_hour;
-SELECT COUNT(*) FROM orders WHERE HOUR(placed_at)=@order_hour;
-*/
-
-SELECT 
     EXTRACT(HOUR FROM placed_at) AS order_hour,
     COUNT(*) AS num_orders,
     SUM(cost) AS total_revenue
@@ -98,22 +18,7 @@ GROUP BY order_hour
 ORDER BY order_hour;
 
 
-SELECT 
-        order_date,
-        SUM(COST) AS top_10_sum
-FROM (  
-        SELECT 
-        placed_at::date AS order_date, 
-        cost, 
-        ROW_NUMBER() OVER (
-        PARTITION BY placed_at::date
-        ORDER BY cost DESC
-        ) AS num
-        FROM orders
-) AS subquery
-WHERE num <= 10
-GROUP BY order_date
-ORDER BY top_10_sum DESC;
+Special Query 3 - peak sales day
 
 SELECT 
         order_date,
@@ -132,6 +37,25 @@ WHERE num <= 10
 GROUP BY order_date
 ORDER BY top_10_sum DESC;
 
+
+menu item inventory - special query 4
+SELECT 
+   m.name,
+   AVG(ingredients_used) AS avg_ingredients_used
+FROM (
+   SELECT
+      orders.id,
+      orders.menu_id,
+      SUM(di.servings) AS ingredients_used
+   FROM drinks_ingredients di
+   JOIN drinks_orders orders ON di.drink_id = orders.id
+   GROUP BY orders.id, orders.menu_id
+) AS drink_ingredients_count 
+JOIN menu m ON drink_ingredients_count.menu_id = m.id
+GROUP BY m.name;
+
+Special Query 5 
+best of the worst
 
 WITH week_orders AS (
     select 
@@ -170,7 +94,65 @@ SELECT
 FROM lowest_day ld
 JOIN top_seller ts ON TRUE;
 
+6. check item count
+SELECT COUNT(*) AS number_of_menu_items FROM menu;
 
+7. check yesterday sales
+SELECT
+  SUM(cost) AS yesterdays_sales
+FROM
+  orders
+WHERE
+  DATE(placed_at) = CURRENT_DATE - INTERVAL '1 day';
+
+8. ccost from drink
+
+SELECT orders.id, m.name, m.cost
+FROM menu m
+JOIN drinks_orders orders ON m.id = orders.menu_id
+
+9. employee yesterdat
+
+SELECT employee_id,
+       SUM(cost) as total_sales
+FROM orders
+WHERE DATE(placed_at) = CURRENT_DATE - INTERVAL '1 Day'
+GROUP BY employee_id
+ORDER BY total_sales DESC
+
+10. Fetch drink ingredients
+SELECT * FROM drinks_ingredients
+WHERE drink_id = $1;
+
+11. get last n day of sales
+SELECT * FROM orders
+    WHERE placed_at BETWEEN CURRENT_DATE - INTERVAL '5 days' AND CURRENT_DATE;
+
+12. Category drinks
+SELECT * FROM menu
+WHERE menu.category_id = $1
+
+13. num orders by employee yesterdat
+SELECT
+    employee_id,
+    COUNT(*) AS orders_taken
+FROM
+    orders
+WHERE
+    DATE(placed_at) = CURRENT_DATE - INTERVAL '1 day'
+GROUP BY
+    employee_id
+ORDER BY
+    orders_taken DESC;
+
+
+14. sales by hour
+SELECT DATE_TRUNC('hour', placed_at), SUM(cost) as sales
+FROM orders
+WHERE placed_at::DATE = CURRENT_DATE - 1
+GROUP BY DATE_TRUNC('hour', placed_at);
+
+15. time frame
 SELECT
     MIN(placed_at) AS first_sale_date,
     MAX(placed_at) AS last_sale_date,
@@ -178,6 +160,7 @@ SELECT
 FROM
     orders;
 
+16. today so far sales
 SELECT
   SUM(cost) AS today_so_far
 FROM
@@ -185,8 +168,11 @@ FROM
 WHERE
   DATE(placed_at) = CURRENT_DATE;
 
+17.total sales
+
 SELECT SUM(cost) AS total_sales FROM orders;
 
+18. verify peak sales
 
 SELECT
     DATE(placed_at) AS sales_day,
