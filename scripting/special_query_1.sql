@@ -1,6 +1,7 @@
 SELECT 
-    COUNT(*) as amt_of_orders,
-    placed_at 
+    DATE_PART('week', placed_at) AS week_num,
+    COUNT(*) AS amt_of_orders
 FROM orders
 GROUP BY 
-    DATEPART(week, orders.placed_at)
+    DATE_PART('week', placed_at)
+ORDER BY week_num;
