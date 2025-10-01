@@ -16,6 +16,3 @@ GROUP BY order_date
 ORDER BY top_10_sum DESC;
 
 
-
-
-
