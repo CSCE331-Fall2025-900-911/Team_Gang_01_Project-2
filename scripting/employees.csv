@@ -1,0 +1,13 @@
+id,name,hours_worked,is_manager,pin
+0,Paul Taele,3014,TRUE,100000000
+1,Macro Iskander,2475,FALSE,7734
+2,Shawn Lupoli,2088,FALSE,3760
+3,Sandeep Kumar,2602,FALSE,3520
+4,Amit Merchant,3190,FALSE,3629
+5,Robert Lightfoot,2764,FALSE,7234
+6,Nicholas Cohen,2307,FALSE,8177
+7,Dinidu Sam,2081,TRUE,8482
+8,Robin Suresh,693,TRUE,5722
+9,Karam Masad,1205,FALSE,9767
+10,Zachry George,2964,TRUE,6767
+11,Zanir Pirani,2003,FALSE,1234
