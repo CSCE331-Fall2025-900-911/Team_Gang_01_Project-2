@@ -1,0 +1,1 @@
+SELECT SUM(cost) AS total_sales FROM orders;
