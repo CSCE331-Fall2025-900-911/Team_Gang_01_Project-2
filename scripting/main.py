@@ -74,11 +74,24 @@ class Ingredient:
 START_DT = datetime.now() - timedelta(days=500)
 END_DT = datetime.now()
 
-def generate_random_datetime(start: datetime, end: datetime) -> datetime:
-    total_seconds = (end - start).total_seconds()
-    random_seconds = random.uniform(0, total_seconds)
+START_DT = START_DT.replace(hour=0, minute=0, second=0, microsecond=0)
+END_DT = END_DT.replace(hour=0, minute=0, second=0, microsecond=0)
 
-    return start + timedelta(seconds=random_seconds)
+def generate_random_datetime(start: datetime, end: datetime) -> datetime:
+    delta_days = (end.date() - start.date()).days
+    random_day = start + timedelta(days=random.randint(0, delta_days))
+    
+    average = 14 * 60 * 60  # 2 PM in seconds
+    stddev = 2 * 60 * 60  # 2 hours in seconds   
+
+    random_seconds = round(random.normalvariate(average, stddev))
+    
+    if random_seconds < 8 * 60 * 60:
+        random_seconds = 8 * 60 * 60
+    elif random_seconds > 22 * 60 * 60:
+        random_seconds = 22 * 60 * 60
+    
+    return random_day + timedelta(seconds=random_seconds)
 
 def read_categories() -> list[Category]:
     with open("categories.csv") as f:
