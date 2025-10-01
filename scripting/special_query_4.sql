@@ -14,3 +14,18 @@ REWORDED: For each menu item, how many inventory items are used in its preparati
    This has more of a business application but 
    it is a bit more complex. */
 
+
+SELECT 
+   m.name,
+   AVG(ingredients_used) AS avg_ingredients_used
+FROM (
+   SELECT
+      do.id,
+      do.menu_id,
+      SUM(di.serving) AS ingredients_used
+   FROM drinks_ingredients di
+   JOIN drinks_orders do ON di.drink_id = do.id
+   GROUP BY do.id, do.menu_id
+) AS drink_ingredients_count 
+JOIN menu m ON drink_ingredients_count.menu_id = m.id
+GROUP BY m.name;
