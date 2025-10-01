@@ -201,19 +201,19 @@ def main():
         ingredients=ingredients
     )
 
-    with open("orders.csv", "w") as f:
+    with open("orders.csv", "w", newline='') as f:
         writer = csv.DictWriter(f, ["id", "placed_at", "cost", "employee_id"])
         writer.writeheader()
         writer.writerows(map(format_dict, orders))
     print("Successfully wrote orders.csv")
 
-    with open("drink_orders.csv", "w") as f:
+    with open("drink_orders.csv", "w", newline='') as f:
         writer = csv.DictWriter(f, ["id", "menu_id", "order_id"])
         writer.writeheader()
         writer.writerows(map(format_dict, drink_orders))
     print("Successfully wrote drink_orders.csv")
 
-    with open("drink_ingredients.csv", "w") as f:
+    with open("drink_ingredients.csv", "w", newline='') as f:
         writer = csv.DictWriter(f, ["id", "drink_id", "ingredient_id", "servings"])
         writer.writeheader()
         writer.writerows(map(format_dict, drink_ingredients))
