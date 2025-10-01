@@ -77,7 +77,7 @@ END_DT = datetime.now()
 START_DT = START_DT.replace(hour=0, minute=0, second=0, microsecond=0)
 END_DT = END_DT.replace(hour=0, minute=0, second=0, microsecond=0)
 
-def generate_random_datetime(start: datetime, end: datetime) -> datetime:
+def generate_biased_datetime(start: datetime, end: datetime) -> datetime:
     delta_days = (end.date() - start.date()).days
     random_day = start + timedelta(days=random.randint(0, delta_days))
     
@@ -99,13 +99,6 @@ peak_days = {
     date(2025, 4, 30)  # National Bubble Tea Day
 }
 
-def generate_biased_datetime(start: datetime, end: datetime, peak_days: set[datetime], peak_weight: float = 0.05) -> datetime:
-    if random.random() < peak_weight:
-        day = random.choice(tuple(peak_days))
-        seconds = random.randint(0, 24*60*60 - 1)
-        return datetime.combine(day, time(0, 0, 0)) + timedelta(seconds=seconds)
-
-    return generate_random_datetime(start, end)
 
 def read_categories() -> list[Category]:
     with open("categories.csv") as f:
@@ -186,8 +179,8 @@ def generate_orders(
 
             order_total += menu_item.cost
             drink_orders.append(drink_order)
-
-            # pick between 1 and 5 (inclusive) ingredients for this drink 
+            
+            # pick between 0 and 5 (inclusive) ingredients for this drink 
             num_ingredients = random.randint(0, 5)
 
             for drink_ingredient_id in islice(drink_ingredient_id_tracker, num_ingredients):
