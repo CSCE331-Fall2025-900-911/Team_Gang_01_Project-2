@@ -5,7 +5,7 @@ if TYPE_CHECKING:
 import csv
 import random
 from dataclasses import dataclass, asdict
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date, time
 from itertools import count, islice
 
 def format_dict(di: DataclassInstance) -> dict[str, str]:
@@ -92,6 +92,20 @@ def generate_random_datetime(start: datetime, end: datetime) -> datetime:
         random_seconds = 22 * 60 * 60
     
     return random_day + timedelta(seconds=random_seconds)
+
+peak_days = {
+    date(2025, 8, 25),  # First Day of Class
+    date(2024, 11, 30), # tamu v t.u.
+    date(2025, 4, 30)  # National Bubble Tea Day
+}
+
+def generate_biased_datetime(start: datetime, end: datetime, peak_days: set[datetime], peak_weight: float = 0.05) -> datetime:
+    if random.random() < peak_weight:
+        day = random.choice(tuple(peak_days))
+        seconds = random.randint(0, 24*60*60 - 1)
+        return datetime.combine(day, time(0, 0, 0)) + timedelta(seconds=seconds)
+
+    return generate_random_datetime(start, end)
 
 def read_categories() -> list[Category]:
     with open("categories.csv") as f:
@@ -192,7 +206,7 @@ def generate_orders(
 
         order = Order(
             id=order_id, 
-            placed_at=generate_random_datetime(START_DT, END_DT),
+            placed_at=generate_biased_datetime(START_DT, END_DT, peak_days, peak_weight= .01),
             cost=order_total,
             employee_id=random.choice(employees).id,
         )
