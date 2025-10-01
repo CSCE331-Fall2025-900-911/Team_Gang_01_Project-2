@@ -179,8 +179,8 @@ def generate_orders(
 
             order_total += menu_item.cost
             drink_orders.append(drink_order)
-
-            # pick between 1 and 5 (inclusive) ingredients for this drink 
+            
+            # pick between 0 and 5 (inclusive) ingredients for this drink 
             num_ingredients = random.randint(0, 5)
 
             for drink_ingredient_id in islice(drink_ingredient_id_tracker, num_ingredients):
