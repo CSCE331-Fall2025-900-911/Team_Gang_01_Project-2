@@ -1,0 +1,7 @@
+{
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "/Users/karammasad/Library/CloudStorage/iCloudDrive-iCloudDrive (6-19-25 2:32 PM)/com~apple~CloudDocs/Desktop/JavaFX/javafx-sdk-24.0.1/**/*.jar",
+        "/Users/karammasad/Downloads/javafx-sdk-25/**/*.jar"
+    ]
+}
